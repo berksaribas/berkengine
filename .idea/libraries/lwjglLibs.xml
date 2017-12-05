@@ -1,0 +1,35 @@
+<component name="libraryTable">
+  <library name="lwjglLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-assimp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-glfw.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-openal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-opengl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-stb.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-assimp-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-glfw-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-openal-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-opengl-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-stb-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/joml-1.9.4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-assimp-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-glfw-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-openal-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-opengl-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-stb-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-assimp-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-glfw-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-openal-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-opengl-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libraries/lwjgl-stb-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
