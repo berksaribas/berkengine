@@ -46,7 +46,7 @@ public class Shadow {
 
     public void createLightFrustrum() {
         lightProjection = new Matrix4f();
-        lightProjection.ortho(-10, 10, -10, 10, NEAR, FAR);
+        lightProjection.ortho(-2, 2, -2, 2, NEAR, FAR);
     }
 
     public void createLightView(Vector3f pos) {
