@@ -16,7 +16,9 @@ public class Main {
         GameScene scene = new GameScene(WIDTH, HEIGHT);
 
         while(!displayManager.closeRequested()) {
-            scene.loop(displayManager.getDelta());
+            if(displayManager.getDelta() > 0) {
+                scene.loop(displayManager.getDelta());
+            }
             displayManager.update();
         }
 
