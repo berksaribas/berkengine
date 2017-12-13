@@ -1,11 +1,11 @@
 package engine.Object;
 
-import engine.Model.RawModel;
 import engine.Model.TexturedModel;
 import engine.Physics.AABB;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameObject {
     protected TexturedModel model;
@@ -13,6 +13,8 @@ public class GameObject {
     protected ArrayList<GameObject> children;
     protected GameObject parent;
     protected AABB collider;
+    protected int textureRepeat;
+    protected HashMap<Class, Component> components;
 
     public GameObject(GameObject parent, TexturedModel model, Vector3f position, Vector3f rotation, Vector3f scale){
         this.model = model;
@@ -21,10 +23,16 @@ public class GameObject {
         this.scale = scale;
         this.children = new ArrayList<>();
         this.parent = parent;
-        collider = new AABB(position, new Vector3f(scale.x + scale.x/5, scale.y + scale.y/5, scale.z + scale.z/5));
+        this.collider = new AABB(position, new Vector3f(scale.x, scale.y, scale.z));
         if(parent != null) {
             parent.children.add(this);
         }
+        textureRepeat = 1;
+        components = new HashMap<>();
+    }
+
+    public <T extends Component> T getByComponent(Class<T> cl) {
+        return cl.cast(components.get(cl));
     }
 
     public ArrayList<GameObject> getChildren() {
@@ -68,10 +76,20 @@ public class GameObject {
     }
 
     public void update(float delta) {
-
+        for(Class entity : components.keySet()) {
+            components.get(entity).act(delta);
+        }
     }
 
     public AABB getCollider() {
         return collider;
+    }
+
+    public int getTextureRepeat() {
+        return textureRepeat;
+    }
+
+    public void setTextureRepeat(int textureRepeat) {
+        this.textureRepeat = textureRepeat;
     }
 }
