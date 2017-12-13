@@ -1,10 +1,8 @@
 package game.Scenes;
 
-import engine.Input.KeyboardHandler;
-import engine.Input.MouseHandler;
 import engine.Model.TexturedModel;
-import engine.Physics.AABB;
 import engine.Scene.Lightning.Shadow;
+import game.GameObjects.CubeObject;
 import game.GameObjects.PlayerObject;
 import game.Models.CrateModel;
 import engine.Object.GameObject;
@@ -12,20 +10,18 @@ import engine.Scene.Camera.FollowerCamera;
 import engine.Scene.Lightning.Light;
 import engine.Scene.Scene;
 import game.Models.TerrainModel;
-import game.Models.TreeModel;
+import game.Models.CubeModel;
 import game.Skyboxes.ClearSkybox;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public class GameScene extends Scene {
     FollowerCamera camera;
 
     CrateModel crateModel;
-    TreeModel treeModel;
+    CubeModel cubeModel;
     TerrainModel terrainModel;
 
     PlayerObject player;
@@ -55,7 +51,7 @@ public class GameScene extends Scene {
     @Override
     protected void initializeModels() {
         crateModel = new CrateModel();
-        treeModel = new TreeModel();
+        cubeModel = new CubeModel();
         terrainModel = new TerrainModel();
     }
 
@@ -67,24 +63,22 @@ public class GameScene extends Scene {
 
         objects = new HashMap<>();
         objects.put(crateModel, new ArrayList<>());
-        objects.put(treeModel, new ArrayList<>());
+        objects.put(cubeModel, new ArrayList<>());
         objects.put(terrainModel, new ArrayList<>());
 
         scene = new GameObject(null, null, new Vector3f(0), new Vector3f(0),new Vector3f(1));
-        player = new PlayerObject(scene, crateModel, new Vector3f(0, 2f, 0), new Vector3f(0, 0, 0), new Vector3f(0.025f, 0.06f, 0.025f));
-        ground = new GameObject(scene, terrainModel, new Vector3f(0, -0.1f, 0), new Vector3f(0, 0, 0), new Vector3f(10f, 0.1f, 10f));
+        player = new PlayerObject(scene, cubeModel, new Vector3f(1.2f, 5f, 2.6f), new Vector3f(0, 0, 0), new Vector3f(0.075f, 0.2f, 0.075f));
 
-        objects.get(terrainModel).add(ground);
-        objects.get(crateModel).add(new GameObject(scene, crateModel, new Vector3f(1f, 0 , 1f ), new Vector3f(0, 0, 0), new Vector3f(0.04f, 0.04f, 0.04f)));
-        cylinder = new GameObject(scene, treeModel, new Vector3f(1f + 0.2f, 0.1f, 2.2f + 0.4f), new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.1f));
-        objects.get(treeModel).add(cylinder);
-        objects.get(treeModel).add(new GameObject(scene, treeModel, new Vector3f(1f + 0.2f, 0.1f, 3.5f), new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.1f)));
-        objects.get(treeModel).add(new GameObject(scene, treeModel, new Vector3f(1f + 0.2f, 0.3f, 3.5f), new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.1f)));
-        objects.get(treeModel).add(new GameObject(scene, treeModel, new Vector3f(1f + 0.2f, 0.5f, 3.5f), new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.1f)));
-        objects.get(treeModel).add(new GameObject(scene, treeModel, new Vector3f(1f + 0.2f, 0.7f, 3.5f), new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.1f)));
-        objects.get(treeModel).add(new GameObject(scene, treeModel, new Vector3f(1f + 0.2f, 0.9f, 3.5f), new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.1f)));
+        //ground = new GameObject(scene, terrainModel, new Vector3f(0, -0.1f, 0), new Vector3f(0, 0, 0), new Vector3f(10f, 0.1f, 10f));
+        //objects.get(terrainModel).add(ground);
 
+        objects.get(cubeModel).add(new CubeObject(scene, cubeModel, new Vector3f(1f + 0.2f, -0.7f, 2.6f), new Vector3f(0, 0, 0), new Vector3f(1f, 1f, 1f)));
 
+        objects.get(cubeModel).add(new CubeObject(scene, cubeModel, new Vector3f(1f + 0.2f, 0.3f, 3.8f), new Vector3f(0, 0, 0), new Vector3f(0.2f, 0.2f, 0.2f)));
+
+        objects.get(cubeModel).add(new CubeObject(scene, cubeModel, new Vector3f(1f + 0.2f, -0.3f, 5f), new Vector3f(0, 0, 0), new Vector3f(1f, 1f, 1f)));
+
+        objects.get(cubeModel).add(new CubeObject(scene, cubeModel, new Vector3f(1f + 0.2f, 0.6f, 5f), new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)));
 
     }
 
