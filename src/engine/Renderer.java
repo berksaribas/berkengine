@@ -51,7 +51,7 @@ public class Renderer {
     }
 
     public void renderShadows(HashMap<TexturedModel, ArrayList<GameObject>> objects, Shadow shadow, ShadowShader shadowShader) {
-        //GL11.glCullFace(GL11.GL_FRONT);
+        GL11.glCullFace(GL11.GL_FRONT);
         shadowShader.setLightSpaceMatrix(shadow.getLightSpaceMatrix());
         GL11.glViewport(0, 0, shadow.WIDTH, shadow.HEIGHT);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, shadow.getDepthMapFBO());
@@ -135,7 +135,7 @@ public class Renderer {
                 Matrix4f transformationMatrix = MatrixHelper.
                         createTransformationMatrix(object);
                 objectShader.setTransformationMatrix(transformationMatrix);
-                objectShader.setTextureRepeat(texturedModel.getTextureRepeat());
+                objectShader.setTextureRepeat(object.getTextureRepeat());
 
                 GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             }
