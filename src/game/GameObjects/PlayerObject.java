@@ -10,7 +10,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class PlayerObject extends GameObject {
-    float speed = 60, deltaY, maxJump = 0;
+    float speed = 1f, deltaY, maxJump = 0;
     State state;
     Vector3f initialPosition;
 
@@ -31,50 +31,53 @@ public class PlayerObject extends GameObject {
 
         if(position.y < -2f) {
             position.set(initialPosition);
+            getByComponent(PhysicsComponent.class).setMomentum(new Vector3f(0));
         }
 
+        speed = 0.4f;
         if(getByComponent(PhysicsComponent.class).getMomentum().y < 0f) {
             state = State.FALLING;
         } else if(getByComponent(PhysicsComponent.class).getMomentum().y > 0f) {
             state = State.JUMPING;
         } else {
             state = State.WALKING;
+            speed = 1.5f;
         }
-
-        System.out.println(state);
 
         Vector3f momentum = getByComponent(PhysicsComponent.class).getMomentum();
 
-        momentum.x = 0;
-        momentum.z = 0;
+        float zFactor = 0, xFactor = 0;
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_A)) {
-            getByComponent(PhysicsComponent.class).setMomentum(
-                    new Vector3f(momentum.x + -0.02f * (float) Math.sin(Math.PI / 2 + -rotation.y) * delta * speed,
-                    momentum.y,
-                    momentum.z +0.02f * (float) Math.cos(Math.PI / 2 + -rotation.y) * delta * speed));
+            xFactor += -(float) Math.sin(Math.PI / 2 + -rotation.y) * delta * speed;
+            zFactor += (float) Math.cos(Math.PI / 2 + -rotation.y) * delta * speed;
         }
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_D)) {
-
-            getByComponent(PhysicsComponent.class).setMomentum(
-                    new Vector3f(momentum.x + -0.02f * (float) Math.sin(-Math.PI / 2 + -rotation.y) * delta * speed,
-                    momentum.y,
-                    momentum.z + 0.02f * (float) Math.cos(-Math.PI / 2 + -rotation.y) * delta * speed));
+            xFactor += -(float) Math.sin(-Math.PI / 2 + -rotation.y) * delta * speed;
+            zFactor += (float) Math.cos(-Math.PI / 2 + -rotation.y) * delta * speed;
         }
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_W)) {
-            getByComponent(PhysicsComponent.class).setMomentum(
-                    new Vector3f(momentum.x + 0.02f * (float) Math.sin(-rotation.y) * delta * speed,
-                    momentum.y,
-                    momentum.z + -0.02f * (float) Math.cos(-rotation.y) * delta * speed));
+            xFactor += (float) Math.sin(-rotation.y) * delta * speed;
+            zFactor += -(float) Math.cos(-rotation.y) * delta * speed;
         }
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_S)) {
-            getByComponent(PhysicsComponent.class).setMomentum(
-                    new Vector3f(momentum.x + -0.02f * (float) Math.sin(-rotation.y) * delta * speed,
-                    momentum.y,
-                    momentum.z + 0.02f * (float) Math.cos(-rotation.y) * delta * speed));
+            xFactor += -(float) Math.sin(-rotation.y) * delta * speed;
+            zFactor += (float) Math.cos(-rotation.y) * delta * speed;
+        }
+
+        if((momentum.x >= 0 && xFactor > momentum.x ) || (momentum.x <= 0 && xFactor < momentum.x)) {
+            momentum.x = xFactor;
+        } else if((momentum.x > 0 && xFactor < 0) || (momentum.x < 0 && xFactor > 0)) {
+            momentum.x += xFactor * 0.3f;
+        }
+
+        if((momentum.z >= 0 && zFactor > momentum.z ) || (momentum.z <= 0 && zFactor < momentum.z)) {
+            momentum.z = zFactor;
+        } else if((momentum.z > 0 && zFactor < 0) || (momentum.z < 0 && zFactor > 0)) {
+            momentum.z += zFactor * 0.3f;
         }
 
         if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE) && state == State.WALKING) {
