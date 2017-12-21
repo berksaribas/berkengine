@@ -28,4 +28,12 @@ public class Camera {
     public void update(SkyboxShader skyboxShader) {
         skyboxShader.setCamera(getViewMatrix());
     }
+
+    public Vector3f getEye() {
+        return eye;
+    }
+
+    public Vector3f getCenter() {
+        return center;
+    }
 }
