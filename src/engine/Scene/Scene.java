@@ -1,6 +1,8 @@
 package engine.Scene;
 
 import engine.Helper.MatrixHelper;
+import engine.Model.ModelController;
+import engine.Object.ObjectController;
 import engine.Renderer;
 import engine.Shader.ObjectShader;
 import engine.Shader.ShadowShader;
@@ -11,8 +13,10 @@ import org.lwjgl.opengl.GL13;
 
 public abstract class Scene {
     protected Renderer renderer;
+    protected ObjectController objectController;
+    protected ModelController modelController;
 
-    private final float FOV = 45;
+    private final float FOV = 50;
     private final float NEARPLANE = 0.025f;
     private final float FARPLANE = 100;
 
@@ -27,6 +31,8 @@ public abstract class Scene {
     public Scene(int width, int height) {
         WIDTH = width;
         HEIGHT = height;
+        objectController = new ObjectController();
+        modelController = new ModelController();
         setPerspectiveMatrix();
         initializeShaders();
         initializeLights();
