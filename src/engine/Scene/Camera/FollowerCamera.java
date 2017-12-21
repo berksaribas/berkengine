@@ -61,8 +61,8 @@ public class FollowerCamera extends Camera {
         object.getRotation().y -= (float) MouseHandler.getDX() / (60000f * delta + 0.0000001f);
 
         yAngle -= MouseHandler.getDY() / (30000f * delta + 0.0000001f);
-        if(yAngle > Math.PI / 2.1) yAngle = (float)(Math.PI / 2.1);
-        if(yAngle < -Math.PI / 2.1) yAngle = (float)(-Math.PI / 2.1);
+        if(yAngle > Math.PI / 2) yAngle = (float)(Math.PI / 2);
+        if(yAngle < -Math.PI / 2) yAngle = (float)(-Math.PI / 2);
 
     }
 
