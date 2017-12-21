@@ -11,11 +11,12 @@ import static org.lwjgl.opengl.GL30.*;
 public class Shadow {
     private int depthMapFBO, depthMapTexture;
     public int WIDTH = 4096, HEIGHT = 4096;
-    private final float NEAR = -1f, FAR = 10f;
+    private final float NEAR = -1f, FAR = 100f;
     private Matrix4f lightProjection, lightView, biasMatrix;
 
     public Shadow(Vector3f lightPos) {
         depthMapFBO = glGenFramebuffers();
+        glBindFramebuffer(depthMapFBO, GL_DEPTH_ATTACHMENT);
         createShadowTexture(WIDTH, HEIGHT);
         attachTextureToFBO();
         createLightFrustrum();
@@ -28,12 +29,13 @@ public class Shadow {
         glBindTexture(GL_TEXTURE_2D, depthMapTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
                 width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
     }
 
     public void attachTextureToFBO() {
@@ -46,7 +48,7 @@ public class Shadow {
 
     public void createLightFrustrum() {
         lightProjection = new Matrix4f();
-        lightProjection.ortho(-2, 2, -2, 2, NEAR, FAR);
+        lightProjection.ortho(-4, 4, -4, 4, NEAR, FAR);
     }
 
     public void createLightView(Vector3f pos) {
