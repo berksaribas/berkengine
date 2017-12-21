@@ -5,6 +5,8 @@ import engine.Input.MouseHandler;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -76,6 +78,8 @@ public class DisplayManager {
         glfwShowWindow(windowID);
 
         GL.createCapabilities();
+
+        GL11.glEnable(GL13.GL_MULTISAMPLE);
 
         lastFrameTime = System.nanoTime();
     }
