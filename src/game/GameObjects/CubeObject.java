@@ -11,6 +11,5 @@ public class CubeObject extends GameObject{
         textureRepeat = (int)(scale.x / 0.1f);
         textureRepeat = (int)(scale.y / 0.1f) > textureRepeat ? (int)(scale.y / 0.1f) : textureRepeat;
         textureRepeat = (int)(scale.z / 0.1f) > textureRepeat ? (int)(scale.z / 0.1f) : textureRepeat;
-        System.out.println(textureRepeat);
     }
 }
