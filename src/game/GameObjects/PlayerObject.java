@@ -23,6 +23,7 @@ public class PlayerObject extends GameObject {
         state = State.FALLING;
         initialPosition = new Vector3f(position);
         components.put(PhysicsComponent.class, new PhysicsComponent(this));
+        getByComponent(PhysicsComponent.class).disableCollisionWith(BombObject.class);
     }
 
     @Override
