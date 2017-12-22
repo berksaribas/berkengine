@@ -1,14 +1,21 @@
 package engine.Object;
 
+import game.GameObjects.BombObject;
+import game.GameObjects.CubeObject;
+import game.GameObjects.PlayerObject;
 import org.joml.Vector3f;
+
+import java.util.HashSet;
 
 public class PhysicsComponent extends Component {
 
     Vector3f momentum = new Vector3f(0, 0, 0);
     GameObject gameObject;
+    HashSet<Class> disabledCollisions;
 
     public PhysicsComponent(GameObject gameObject) {
         this.gameObject = gameObject;
+        disabledCollisions = new HashSet<>();
     }
 
     @Override
@@ -24,6 +31,19 @@ public class PhysicsComponent extends Component {
         gameObject.getPosition().z += momentum.z;
         checkCollisions(2, momentum);
 
+        if(momentum.y == 0) {
+            momentum.x -= momentum.x;
+            momentum.z -= momentum.z;
+        }
+
+    }
+
+    public void disableCollisionWith(Class disabled) {
+        disabledCollisions.add(disabled);
+    }
+
+    public float getVelocity() {
+        return (float)Math.sqrt(momentum.x * momentum.x + momentum.z * momentum.z);
     }
 
     public void addMomentum(Vector3f momentum) {
@@ -40,7 +60,9 @@ public class PhysicsComponent extends Component {
         boolean collided = false;
 
         for(int i = 0; i < iterator.getChildren().size(); i++) {
-            if(iterator.getChildren().get(i) != gameObject) {
+            if(disabledCollisions.contains(iterator.getChildren().get(i).getClass())){
+                collided = false;
+            } else if(iterator.getChildren().get(i) != gameObject) {
                 if(gameObject.getCollider().intersects(iterator.getChildren().get(i).getCollider())) {
                     if(cord == 0) {
                         gameObject.getPosition().x += -momentum.x;
