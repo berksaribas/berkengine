@@ -15,6 +15,7 @@ public class BombObject extends GameObject {
     public BombObject(GameObject parent, TexturedModel model, Vector3f position, Vector3f rotation, Vector3f scale) {
         super(parent, model, position, rotation, scale);
         components.put(PhysicsComponent.class, new PhysicsComponent(this));
+        getByComponent(PhysicsComponent.class).disableCollisionWith(PlayerObject.class);
     }
 
     public void throwBomb(Vector3f direction) {
