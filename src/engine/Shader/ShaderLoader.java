@@ -14,7 +14,7 @@ public class ShaderLoader {
     public static int loadShader(String fileName, int type) {
         String shaderLines = "";
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            BufferedReader reader = new BufferedReader(new FileReader("shaders/" + fileName));
             String line;
             while((line = reader.readLine()) != null) {
                 shaderLines += line + "\n";
