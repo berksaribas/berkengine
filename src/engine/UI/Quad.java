@@ -9,8 +9,11 @@ public class Quad {
     private Texture texture;
     private ShaderProgram shaderProgram;
 
-    public Quad() {
-
+    public Quad(float width, float height, Texture texture, ShaderProgram shaderProgram) {
+        this.width = width;
+        this.height = height;
+        this.texture = texture;
+        this.shaderProgram = shaderProgram;
     }
 
     public Texture getTexture() {
