@@ -1,52 +1,42 @@
 package engine.Scene.Lightning;
 
+import engine.FrameBuffer.FBO;
+import engine.Texture.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class Shadow {
-    private int depthMapFBO, depthMapTexture;
-    public int WIDTH = 4096, HEIGHT = 4096;
+    private FBO fbo;
+    private Texture texture;
+
     private final float NEAR = -1f, FAR = 100f;
     private Matrix4f lightProjection, lightView, biasMatrix;
+    private int size;
 
-    public Shadow(Vector3f lightPos) {
-        depthMapFBO = glGenFramebuffers();
-        glBindFramebuffer(depthMapFBO, GL_DEPTH_ATTACHMENT);
-        createShadowTexture(WIDTH, HEIGHT);
-        attachTextureToFBO();
-        createLightFrustrum();
+    public Shadow(Vector3f lightPos, int size) {
+        this.size = size;
+        fbo = new FBO();
+        createShadowTexture(size, size);
+        fbo.attachTexture(texture.getId(), GL_DEPTH_ATTACHMENT);
+        createLightFrustum();
         createLightView(lightPos);
         createBiasMatrix();
     }
 
     public void createShadowTexture(int width, int height) {
-        depthMapTexture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, depthMapTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-                width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        texture = new Texture(width, height, GL_DEPTH_COMPONENT, GL_FLOAT);
+
         float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
+        texture.bind();
+        texture.setFloatParam(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+        texture.unbind();
     }
 
-    public void attachTextureToFBO() {
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapTexture, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-
-    public void createLightFrustrum() {
+    public void createLightFrustum() {
         lightProjection = new Matrix4f();
         lightProjection.ortho(-4, 4, -4, 4, NEAR, FAR);
     }
@@ -62,12 +52,12 @@ public class Shadow {
         biasMatrix.setTranslation(0.5f, 0.5f, 0.5f);
     }
 
-    public int getDepthMapFBO() {
-        return depthMapFBO;
+    public FBO getFbo() {
+        return fbo;
     }
 
-    public int getDepthMapTexture() {
-        return depthMapTexture;
+    public Texture getTexture() {
+        return texture;
     }
 
     public void updateLightView(Vector3f direction, Vector3f pos) {
@@ -85,5 +75,9 @@ public class Shadow {
         Matrix4f result = new Matrix4f();
         biasMatrix.mul(getLightSpaceMatrix(), result);
         return result;
+    }
+
+    public int getSize() {
+        return size;
     }
 }
