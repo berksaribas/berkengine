@@ -15,10 +15,12 @@ float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
 
     float currentDepth = shadowCoordinates.z;
 
-    float bias = max(0.05 * (1.0 - dot(unitNormal, lightVector)), 0.005);
+    //float bias = max(0.05 * (1.0 - dot(unitNormal, lightVector)), 0.005);
 
     float shadow = 0.0;
+
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
@@ -27,6 +29,7 @@ float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
             shadow += currentDepth > pcfDepth  ? 1.0 : 0.0;
         }
     }
+
     shadow /= 9.0;
 
     if(shadowCoordinates.z > 1.0)
