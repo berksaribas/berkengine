@@ -10,6 +10,29 @@ uniform vec3 lightColor;
 uniform sampler2D textureSampler;
 uniform sampler2D shadowMap;
 
+float texture2DCompare(sampler2D depths, vec2 uv, float compare){
+    float depth = texture2D(depths, uv).r;
+
+    return compare > depth  ? 1.0 : 0.0;
+}
+
+float texture2DShadowLerp(sampler2D depths, vec2 size, vec2 uv, float compare){
+    vec2 texelSize = vec2(1.0)/size;
+    vec2 f = fract(uv*size+0.5);
+    vec2 centroidUV = floor(uv*size+0.5)/size;
+
+    float lb = texture2DCompare(depths, centroidUV+texelSize*vec2(0.0, 0.0), compare);
+    float lt = texture2DCompare(depths, centroidUV+texelSize*vec2(0.0, 1.0), compare);
+    float rb = texture2DCompare(depths, centroidUV+texelSize*vec2(1.0, 0.0), compare);
+    float rt = texture2DCompare(depths, centroidUV+texelSize*vec2(1.0, 1.0), compare);
+
+    float a = mix(lb, lt, f.y);
+    float b = mix(rb, rt, f.y);
+    float c = mix(a, b, f.x);
+
+    return c;
+}
+
 float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
     float closestDepth = texture(shadowMap, shadowCoordinates.xy).r;
 
@@ -25,8 +48,8 @@ float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, shadowCoordinates.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth > pcfDepth  ? 1.0 : 0.0;
+            vec2 off = vec2(x,y) * texelSize;
+            shadow += texture2DShadowLerp(shadowMap, 1 / texelSize, shadowCoordinates.xy + off, currentDepth);
         }
     }
 
@@ -37,7 +60,6 @@ float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
 
     return shadow;
 }
-
 
 void main(void) {
 
@@ -62,5 +84,7 @@ void main(void) {
     float specularness = pow(max(dot(unitHalfway, unitNormal), 0.0), 32);
     vec3 specularColor = 0.3f * specularness * lightColor * (1.0 - shadow);
 
-    outColor = vec4(ambientColor + diffuseColor, 1.0) * texture(textureSampler, passedTextureCoordinates) + vec4(specularColor, 1.0);
+    vec3 totalColor = (ambientColor + diffuseColor) * texture(textureSampler, passedTextureCoordinates).rgb + specularColor;
+
+    outColor = vec4(totalColor, texture(textureSampler, passedTextureCoordinates).a);
 }
