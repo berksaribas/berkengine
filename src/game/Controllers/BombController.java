@@ -42,7 +42,6 @@ public class BombController {
             Vector3f explosion = new Vector3f(player.getPosition()).sub(bombObject.getPosition());
             float length = explosion.length();
             explosion.normalize();
-            explosion.mul(delta);
 
             explosion.div(Math.max(length * length * 1 / 2, 0.20f));
             if(length < 2f) {

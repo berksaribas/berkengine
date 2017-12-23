@@ -21,7 +21,8 @@ public class BombObject extends GameObject {
     public void throwBomb(Vector3f direction) {
         state = State.EXPLODED;
         Vector3f momentum = new Vector3f(direction);
-        momentum.div(100f, 40f, 100f);
+        momentum.div(2f, 1f, 2f);
+        momentum.mul(1f, 2f, 1f);
         getByComponent(PhysicsComponent.class).addMomentum(momentum);
     }
 

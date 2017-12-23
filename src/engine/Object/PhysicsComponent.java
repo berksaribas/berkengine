@@ -20,16 +20,17 @@ public class PhysicsComponent extends Component {
 
     @Override
     public void act(float delta) {
-        addMomentum(new Vector3f(0, -0.1f * delta, 0));
+        addMomentum(new Vector3f(0, -7f * delta, 0));
 
-        gameObject.getPosition().y += momentum.y;
-        checkCollisions(1, momentum);
 
-        gameObject.getPosition().x += momentum.x;
-        checkCollisions(0, momentum);
+        gameObject.getPosition().y += momentum.y * delta;
+        checkCollisions(1, momentum, delta);
 
-        gameObject.getPosition().z += momentum.z;
-        checkCollisions(2, momentum);
+        gameObject.getPosition().x += momentum.x  * delta;
+        checkCollisions(0, momentum, delta);
+
+        gameObject.getPosition().z += momentum.z  * delta;
+        checkCollisions(2, momentum, delta);
 
         if(momentum.y == 0) {
             momentum.x -= momentum.x;
@@ -54,7 +55,7 @@ public class PhysicsComponent extends Component {
         this.momentum.set(momentum);
     }
 
-    public boolean checkCollisions(int cord, Vector3f momentum) {
+    public boolean checkCollisions(int cord, Vector3f momentum, float delta) {
         GameObject iterator = gameObject.getParent();
 
         boolean collided = false;
@@ -65,13 +66,13 @@ public class PhysicsComponent extends Component {
             } else if(iterator.getChildren().get(i) != gameObject) {
                 if(gameObject.getCollider().intersects(iterator.getChildren().get(i).getCollider())) {
                     if(cord == 0) {
-                        gameObject.getPosition().x += -momentum.x;
+                        gameObject.getPosition().x += -momentum.x * delta;
                         momentum.x = 0;
                     } else if(cord == 1) {
-                        gameObject.getPosition().y += -momentum.y;
+                        gameObject.getPosition().y += -momentum.y * delta;
                         momentum.y = 0;
                     } else if(cord == 2) {
-                        gameObject.getPosition().z += -momentum.z;
+                        gameObject.getPosition().z += -momentum.z * delta;
                         momentum.z = 0;
                     }
                     collided = true;

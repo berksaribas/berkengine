@@ -50,23 +50,23 @@ public class PlayerObject extends GameObject {
         float zFactor = 0, xFactor = 0;
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_A)) {
-            xFactor += -(float) Math.sin(Math.PI / 2 + -rotation.y) * delta * speed;
-            zFactor += (float) Math.cos(Math.PI / 2 + -rotation.y) * delta * speed;
+            xFactor += -(float) Math.sin(Math.PI / 2 + -rotation.y) * speed;
+            zFactor += (float) Math.cos(Math.PI / 2 + -rotation.y) * speed;
         }
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_D)) {
-            xFactor += -(float) Math.sin(-Math.PI / 2 + -rotation.y) * delta * speed;
-            zFactor += (float) Math.cos(-Math.PI / 2 + -rotation.y) * delta * speed;
+            xFactor += -(float) Math.sin(-Math.PI / 2 + -rotation.y) * speed;
+            zFactor += (float) Math.cos(-Math.PI / 2 + -rotation.y) * speed;
         }
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_W)) {
-            xFactor += (float) Math.sin(-rotation.y) * delta * speed;
-            zFactor += -(float) Math.cos(-rotation.y) * delta * speed;
+            xFactor += (float) Math.sin(-rotation.y) * speed;
+            zFactor += -(float) Math.cos(-rotation.y) * speed;
         }
 
         if (KeyboardHandler.isKeyDown(GLFW_KEY_S)) {
-            xFactor += -(float) Math.sin(-rotation.y) * delta * speed;
-            zFactor += (float) Math.cos(-rotation.y) * delta * speed;
+            xFactor += -(float) Math.sin(-rotation.y) * speed;
+            zFactor += (float) Math.cos(-rotation.y) * speed;
         }
 
         if((momentum.x >= 0 && xFactor > momentum.x ) || (momentum.x <= 0 && xFactor < momentum.x)) {
@@ -82,7 +82,7 @@ public class PlayerObject extends GameObject {
         }
 
         if(KeyboardHandler.isKeyDown(GLFW_KEY_SPACE) && state == State.WALKING) {
-            getByComponent(PhysicsComponent.class).addMomentum(new Vector3f(0,2f * delta,0));
+            getByComponent(PhysicsComponent.class).addMomentum(new Vector3f(0,2.5f,0));
         }
 
     }
