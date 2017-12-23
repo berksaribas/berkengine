@@ -12,7 +12,7 @@ public class Shadow {
     private FBO fbo;
     private Texture texture;
 
-    private final float NEAR = -1f, FAR = 100f;
+    private final float NEAR = -1f, FAR = 100f, RADIUS = 4f;
     private Matrix4f lightProjection, lightView, biasMatrix;
     private int size;
 
@@ -38,7 +38,7 @@ public class Shadow {
 
     public void createLightFrustum() {
         lightProjection = new Matrix4f();
-        lightProjection.ortho(-4, 4, -4, 4, NEAR, FAR);
+        lightProjection.ortho(-RADIUS, RADIUS, -RADIUS, RADIUS, NEAR, FAR);
     }
 
     public void createLightView(Vector3f pos) {
@@ -62,7 +62,12 @@ public class Shadow {
 
     public void updateLightView(Vector3f direction, Vector3f pos) {
         lightView = new Matrix4f();
+
         lightView.lookAt(new Vector3f(direction.x + pos.x, direction.y + pos.y, direction.z + pos.z), pos, new Vector3f(0, 1, 0));
+
+        lightView.m30(lightView.m30() - (lightView.m30() % (2f * RADIUS / size)));
+        lightView.m31(lightView.m31() - (lightView.m31() % (2f * RADIUS / size)));
+        lightView.m32(lightView.m32() - (lightView.m32() % (2f * RADIUS / size)));
     }
 
     public Matrix4f getLightSpaceMatrix() {
