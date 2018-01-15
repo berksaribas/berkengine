@@ -5,12 +5,12 @@ import engine.Texture.Skybox;
 public class ClearSkybox extends Skybox {
 
     static String[] fileNames= {
-            "textures/skybox/right.jpg",
-            "textures/skybox/left.jpg",
-            "textures/skybox/top.jpg",
-            "textures/skybox/bottom.jpg",
-            "textures/skybox/back.jpg",
-            "textures/skybox/front.jpg"
+            "textures/skybox/brightdayrt.jpg",
+            "textures/skybox/brightdaylf.jpg",
+            "textures/skybox/brightdayup.jpg",
+            "textures/skybox/brightdaydn.jpg",
+            "textures/skybox/brightdaybk.jpg",
+            "textures/skybox/brightdayft.jpg"
     };
 
     public ClearSkybox() {
