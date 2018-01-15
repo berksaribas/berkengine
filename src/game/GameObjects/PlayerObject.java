@@ -7,12 +7,14 @@ import engine.Object.PhysicsComponent;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class PlayerObject extends GameObject {
-    float speed = 1f, deltaY, maxJump = 0;
+    float speed = 1f;
     State state;
     Vector3f initialPosition;
+    int score = 0;
+    int currentPlatform = 0;
+    OnReset onReset;
 
     enum State{
         FALLING, WALKING, JUMPING
@@ -30,9 +32,14 @@ public class PlayerObject extends GameObject {
     public void update(float delta) {
         super.update(delta);
 
-        if(position.y < -2f) {
+        if(position.y < -3f) {
             position.set(initialPosition);
             getByComponent(PhysicsComponent.class).setMomentum(new Vector3f(0));
+            score = 0;
+            currentPlatform = 0;
+            if(onReset != null) {
+                onReset.reset();
+            }
         }
 
         speed = 0.4f;
@@ -87,4 +94,20 @@ public class PlayerObject extends GameObject {
 
     }
 
+    public void setOnReset(OnReset onReset) {
+        this.onReset = onReset;
+    }
+
+    public int getCurrentPlatform() {
+        return currentPlatform;
+    }
+
+    public void setCurrentPlatform(int currentPlatform) {
+        this.currentPlatform = currentPlatform;
+    }
+
+    public void incrementScore() {
+        score++;
+        System.out.println("Score : " + score);
+    }
 }
