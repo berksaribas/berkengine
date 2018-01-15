@@ -9,12 +9,13 @@ public class ObjectShader extends ShaderProgram{
     private static final String fragmentLocation = "ObjectShaderFragment.glsl";
 
     private int transformationMatrix, projectionMatrix, viewMatrix, cameraPosition, lightPosition, lightColor, textureRepeat, depthBias;
-    private int textureSampler, shadowMap;
+    private int textureSampler, depthMap, colorMap;
 
     public ObjectShader() {
         super(vertexString, fragmentLocation);
         loadInt(getUniformLocation("textureSampler"), 0);
         loadInt(getUniformLocation("shadowMap"), 1);
+        loadInt(getUniformLocation("colorMap"), 2);
 
     }
 
@@ -29,7 +30,8 @@ public class ObjectShader extends ShaderProgram{
         textureRepeat = getUniformLocation("textureRepeat");
         depthBias = getUniformLocation("depthBias");
         textureSampler = getUniformLocation("textureSampler");
-        shadowMap = getUniformLocation("shadowMap");
+        depthMap = getUniformLocation("depthMap");
+        colorMap = getUniformLocation("colorMap");
     }
 
     @Override
@@ -66,7 +68,11 @@ public class ObjectShader extends ShaderProgram{
     }
 
     public void setDepthTexture(int i) {
-        loadInt(shadowMap, i);
+        loadInt(depthMap, i);
+    }
+
+    public void setColorTexture(int i) {
+        loadInt(colorMap, i);
     }
 
     public void setTextureRepeat(int repeat) {

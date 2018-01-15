@@ -2,7 +2,6 @@ package engine.Shader;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL43;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
