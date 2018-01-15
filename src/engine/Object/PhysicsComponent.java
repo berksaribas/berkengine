@@ -1,10 +1,9 @@
 package engine.Object;
 
-import game.GameObjects.BombObject;
-import game.GameObjects.CubeObject;
-import game.GameObjects.PlayerObject;
+import engine.Physics.OnCollideWith;
 import org.joml.Vector3f;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class PhysicsComponent extends Component {
@@ -12,16 +11,17 @@ public class PhysicsComponent extends Component {
     Vector3f momentum = new Vector3f(0, 0, 0);
     GameObject gameObject;
     HashSet<Class> disabledCollisions;
+    HashMap<GameObject, OnCollideWith> onCollideWith;
 
     public PhysicsComponent(GameObject gameObject) {
         this.gameObject = gameObject;
         disabledCollisions = new HashSet<>();
+        onCollideWith = new HashMap<>();
     }
 
     @Override
     public void act(float delta) {
         addMomentum(new Vector3f(0, -7f * delta, 0));
-
 
         gameObject.getPosition().y += momentum.y * delta;
         checkCollisions(1, momentum, delta);
@@ -55,6 +55,10 @@ public class PhysicsComponent extends Component {
         this.momentum.set(momentum);
     }
 
+    public void setOnCollideWith(GameObject object, OnCollideWith onCollision) {
+        onCollideWith.put(object, onCollision);
+    }
+
     public boolean checkCollisions(int cord, Vector3f momentum, float delta) {
         GameObject iterator = gameObject.getParent();
 
@@ -71,10 +75,16 @@ public class PhysicsComponent extends Component {
                     } else if(cord == 1) {
                         gameObject.getPosition().y += -momentum.y * delta;
                         momentum.y = 0;
+
+                        if(onCollideWith.get(iterator.getChildren().get(i)) != null) {
+                            onCollideWith.get(iterator.getChildren().get(i)).onCollide();
+                        }
+
                     } else if(cord == 2) {
                         gameObject.getPosition().z += -momentum.z * delta;
                         momentum.z = 0;
                     }
+
                     collided = true;
                     break;
                 }
