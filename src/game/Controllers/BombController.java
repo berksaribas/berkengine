@@ -8,7 +8,7 @@ import engine.Object.PhysicsComponent;
 import engine.Scene.Camera.FollowerCamera;
 import game.GameObjects.BombObject;
 import game.GameObjects.PlayerObject;
-import game.Models.CubeModel;
+import game.Models.BombModel;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
@@ -29,12 +29,12 @@ public class BombController {
         this.modelController = modelController;
     }
 
-    public void handle(FollowerCamera camera, float delta) {
+    public void handle(FollowerCamera camera) {
         if(KeyboardHandler.isKeyDown(GLFW_KEY_LEFT_SHIFT) && !thrown) {
-            bombObject = new BombObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(camera.getEye()), new Vector3f(0, 0, 0), new Vector3f(0.08f, 0.01f, 0.08f));
+            bombObject = new BombObject(scene, modelController.getByModel(BombModel.class), new Vector3f(camera.getEye()), new Vector3f(0, 0, 0), new Vector3f(0.08f, 0.01f, 0.08f));
             objectController.addObject(bombObject);
             bombObject.getByComponent(PhysicsComponent.class).addMomentum(player.getByComponent(PhysicsComponent.class).getMomentum()); // initial moment
-            bombObject.throwBomb(new Vector3f((float) Math.sin(-player.getRotation().y) * 3 * (float)(Math.PI / 2 - Math.abs(camera.yAngle)), camera.getCenter().y - camera.getEye().y,-(float) Math.cos(-player.getRotation().y) * 3 * (float)(Math.PI / 2  - Math.abs(camera.yAngle))));
+            bombObject.throwBomb(new Vector3f((float) Math.sin(-player.getRotation().y) * 5 * (float)(Math.PI / 2 - Math.abs(camera.yAngle)), camera.getCenter().y - camera.getEye().y,-(float) Math.cos(-player.getRotation().y) * 5 * (float)(Math.PI / 2  - Math.abs(camera.yAngle))));
             thrown = true;
         }
 
