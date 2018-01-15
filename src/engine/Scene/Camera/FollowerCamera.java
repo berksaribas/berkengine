@@ -3,7 +3,6 @@ package engine.Scene.Camera;
 import engine.Helper.MatrixHelper;
 import engine.Input.MouseHandler;
 import engine.Object.GameObject;
-import engine.Scene.Camera.Camera;
 import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
