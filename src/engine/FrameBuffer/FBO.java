@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class FBO {
+    private final int DEFAULT_BUFFER = 0;
+
     private int id;
 
     public FBO() {
@@ -11,11 +13,19 @@ public class FBO {
     }
 
     public void attachTexture(int texture, int attachment) {
-        glBindFramebuffer(GL_FRAMEBUFFER, id);
+        bind();
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture, 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        unbind();
+    }
+
+    public void bind() {
+        glBindFramebuffer(GL_FRAMEBUFFER, id);
+    }
+
+    public void unbind() {
+        glBindFramebuffer(GL_FRAMEBUFFER, DEFAULT_BUFFER);
     }
 
     public int getId() {
