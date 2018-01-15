@@ -1,25 +1,22 @@
 package game.Scenes;
 
-import engine.Scene.Lightning.Shadow;
-import game.Controllers.BombController;
-import game.GameObjects.CubeObject;
-import game.GameObjects.PlayerObject;
-import game.Models.CrateModel;
 import engine.Object.GameObject;
 import engine.Scene.Camera.FollowerCamera;
 import engine.Scene.Lightning.Light;
+import engine.Scene.Lightning.Shadow;
 import engine.Scene.Scene;
-import game.Models.TerrainModel;
+import engine.Texture.Texture;
+import engine.UI.Quad;
+import game.Controllers.GameController;
+import game.Models.BombModel;
+import game.Models.CrateModel;
 import game.Models.CubeModel;
+import game.Models.TerrainModel;
 import game.Skyboxes.ClearSkybox;
 import org.joml.Vector3f;
 
 public class GameScene extends Scene {
     FollowerCamera camera;
-
-    PlayerObject player;
-
-    GameObject scene;
 
     Light light;
 
@@ -27,7 +24,7 @@ public class GameScene extends Scene {
 
     ClearSkybox clearSkybox;
 
-    BombController bombController;
+    GameController gameController;
 
     public GameScene(int width, int height) {
         super(width, height);
@@ -35,13 +32,13 @@ public class GameScene extends Scene {
 
     @Override
     protected void initializeLights() {
-        light = new Light(new Vector3f(-0.2f, 1.0f, -0.3f), new Vector3f(1, 1, 1), 0);
-        shadow = new Shadow(new Vector3f(light.getPosition().x, light.getPosition().y, light.getPosition().z));
+        light = new Light(new Vector3f(-0.3f, 1.0f,  -0.1f), new Vector3f(1, 1, 1), 0);
+        shadow = new Shadow(new Vector3f(light.getPosition().x, light.getPosition().y, light.getPosition().z), 4096);
     }
 
     @Override
     protected void initializeCamera() {
-        camera = new FollowerCamera(player, 1);
+        camera = new FollowerCamera(gameController.getPlayer(), 1);
     }
 
     @Override
@@ -49,46 +46,37 @@ public class GameScene extends Scene {
         modelController.addModel(CrateModel.class, new CrateModel());
         modelController.addModel(CubeModel.class, new CubeModel());
         modelController.addModel(TerrainModel.class, new TerrainModel());
+        modelController.addModel(BombModel.class, new BombModel());
     }
 
     @Override
     protected void createObjects() {
         clearSkybox = new ClearSkybox();
 
-        scene = new GameObject(null, null, new Vector3f(0), new Vector3f(0),new Vector3f(1));
+        uiController.addNewUIElement(new Quad(new Vector3f(0f,0f,0), new Vector3f(48f/1600,48f/1600 * 16/9,1f), new Texture("textures/crosshairsg.png"),quadShader));
 
-        player = new PlayerObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(1.2f, 5f, 2.6f), new Vector3f(0, 0, 0), new Vector3f(0.075f, 0.2f, 0.075f));
+//        uiController.addNewUIElement(new Quad(new Vector3f(-0.4f,-0.3f,0), new Vector3f(480f/1600,480f/1600 * 16/9,1f), renderer.gaussianBlur.getResult(), quadShader));
+//
+//        uiController.addNewUIElement(new Quad(new Vector3f(+0.4f,-0.3f,0), new Vector3f(480f/1600,480f/1600 * 16/9,1f), shadow.getColorTexture(), quadShader));
 
-        objectController.addObject(new CubeObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(1f + 0.2f, -0.7f, 2.6f), new Vector3f(0, 0, 0), new Vector3f(1f, 1f, 1f)));
-
-        objectController.addObject(new CubeObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(1f + 0.2f, 0.3f, 3.8f), new Vector3f(0, 0, 0), new Vector3f(0.2f, 0.2f, 0.2f)));
-
-        objectController.addObject(new CubeObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(1f + 0.2f, -0.3f, 5f), new Vector3f(0, 0, 0), new Vector3f(1f, 1f, 1f)));
-
-        objectController.addObject(new CubeObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(1f + 0.2f, 0.6f, 5f), new Vector3f(0, 0, 0), new Vector3f(0.4f, 0.4f, 0.4f)));
-
-        objectController.addObject(new CubeObject(scene, modelController.getByModel(CubeModel.class), new Vector3f(5f, 2f, 5f), new Vector3f(0, 0, 0), new Vector3f(1f, 1f, 1f)));
-
-        bombController = new BombController(objectController, modelController, scene, player);
-
+        gameController = new GameController(objectController, modelController);
     }
 
     @Override
     protected void update(float delta) {
-        shadow.updateLightView(new Vector3f(light.getPosition().x, light.getPosition().y, light.getPosition().z), player.getPosition());
+        shadow.updateLightView(new Vector3f(light.getPosition().x, light.getPosition().y, light.getPosition().z), gameController.getPlayer().getPosition());
 
         camera.handleFPSMovement(delta);
 
-        updateTree(scene, delta);
+        updateTree(gameController.getScene(), delta);
 
-        bombController.handle(camera, delta);
+        gameController.update(camera);
 
         camera.followObject();
 
         camera.update(objectShader);
 
         objectShader.setLight(light.getPosition(), light.getColor());
-
     }
 
     public void updateTree(GameObject parent, float delta) {
@@ -113,5 +101,10 @@ public class GameScene extends Scene {
     @Override
     protected void renderShadows() {
         renderer.renderShadows(objectController.getObjects(), shadow, shadowShader);
+    }
+
+    @Override
+    protected void renderUI() {
+        renderer.renderQuads(uiController.getQuads());
     }
 }
