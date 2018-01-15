@@ -8,23 +8,25 @@ out vec4 outColor;
 
 uniform vec3 lightColor;
 uniform sampler2D textureSampler;
-uniform sampler2D shadowMap;
+uniform sampler2D depthMap;
+uniform sampler2D colorMap;
 
-float texture2DCompare(sampler2D depths, vec2 uv, float compare){
+float texture2DCompare(sampler2D depths, vec2 uv, float compare, float bias){
+
+
     float depth = texture2D(depths, uv).r;
-
-    return compare > depth  ? 1.0 : 0.0;
+    return compare - bias > depth  ? 1.0 : 0.0;
 }
 
-float texture2DShadowLerp(sampler2D depths, vec2 size, vec2 uv, float compare){
+float shadowSampler(sampler2D depths, vec2 size, vec2 uv, float compare, float bias){
     vec2 texelSize = vec2(1.0)/size;
     vec2 f = fract(uv*size+0.5);
     vec2 centroidUV = floor(uv*size+0.5)/size;
 
-    float lb = texture2DCompare(depths, centroidUV+texelSize*vec2(0.0, 0.0), compare);
-    float lt = texture2DCompare(depths, centroidUV+texelSize*vec2(0.0, 1.0), compare);
-    float rb = texture2DCompare(depths, centroidUV+texelSize*vec2(1.0, 0.0), compare);
-    float rt = texture2DCompare(depths, centroidUV+texelSize*vec2(1.0, 1.0), compare);
+    float lb = texture2DCompare(depths, centroidUV+texelSize*vec2(0.0, 0.0), compare, bias);
+    float lt = texture2DCompare(depths, centroidUV+texelSize*vec2(0.0, 1.0), compare, bias);
+    float rb = texture2DCompare(depths, centroidUV+texelSize*vec2(1.0, 0.0), compare, bias);
+    float rt = texture2DCompare(depths, centroidUV+texelSize*vec2(1.0, 1.0), compare, bias);
 
     float a = mix(lb, lt, f.y);
     float b = mix(rb, rt, f.y);
@@ -33,30 +35,44 @@ float texture2DShadowLerp(sampler2D depths, vec2 size, vec2 uv, float compare){
     return c;
 }
 
+float VSM(sampler2D depths, vec2 uv, float compare){
+    vec2 moments = texture2D(depths, uv).xy;
+
+    if (compare <= moments.x)
+        return 1.0;
+
+    float variance = moments.y - (moments.x*moments.x);
+    variance = max(variance, 0.0002);
+
+    float d = compare - moments.x;
+    float p_max = variance / (variance + d*d);
+
+    return p_max;
+}
+
 float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
-    float closestDepth = texture(shadowMap, shadowCoordinates.xy).r;
 
-    float currentDepth = shadowCoordinates.z;
-
-    //float bias = max(0.05 * (1.0 - dot(unitNormal, lightVector)), 0.005);
+    vec4 point = shadowCoordinates / shadowCoordinates.w;
 
     float shadow = 0.0;
 
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-
-    for(int x = -1; x <= 1; ++x)
-    {
-        for(int y = -1; y <= 1; ++y)
-        {
-            vec2 off = vec2(x,y) * texelSize;
-            shadow += texture2DShadowLerp(shadowMap, 1 / texelSize, shadowCoordinates.xy + off, currentDepth);
-        }
-    }
-
-    shadow /= 9.0;
-
+//    vec2 texelSize = 1.0 / textureSize(depthMap, 0);
+//
+//    for(int x = -1; x <= 1; ++x)
+//    {
+//        for(int y = -1; y <= 1; ++y)
+//        {
+//            vec2 off = vec2(x,y) * texelSize;
+//            shadow += shadowSampler(depthMap, 1 / texelSize, point.xy + off, point.z, bias);
+//        }
+//    }
+//    shadow /= 9.0;
+//
     if(shadowCoordinates.z > 1.0)
-        shadow = 0.0;
+        return 0;
+
+    shadow = 1 - VSM(colorMap, point.xy, point.z);
+
 
     return shadow;
 }
@@ -82,7 +98,7 @@ void main(void) {
 
     //Specular Lightning
     float specularness = pow(max(dot(unitHalfway, unitNormal), 0.0), 32);
-    vec3 specularColor = 0.3f * specularness * lightColor * (1.0 - shadow);
+    vec3 specularColor = 0.4f * specularness * lightColor * (1.0 - shadow);
 
     vec3 totalColor = (ambientColor + diffuseColor) * texture(textureSampler, passedTextureCoordinates).rgb + specularColor;
 
