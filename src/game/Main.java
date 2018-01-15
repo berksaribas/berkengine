@@ -1,10 +1,9 @@
 package game;
 
 import engine.DisplayManager;
-import engine.Scene.Scene;
 import game.Scenes.GameScene;
 
-public class Main {
+public class  Main {
 
     public static int WIDTH = 1600, HEIGHT = 900;
 
