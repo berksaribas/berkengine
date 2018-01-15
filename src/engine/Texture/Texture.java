@@ -7,8 +7,9 @@ import org.lwjgl.opengl.GL30;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 
 public class Texture {
 
@@ -41,7 +42,7 @@ public class Texture {
 
     }
 
-    public Texture(int width, int height, int format, int type) {
+    public Texture(int width, int height, int filter, int internalFormat, int format,int type) {
         this.width = width;
         this.height = height;
 
@@ -49,13 +50,13 @@ public class Texture {
 
         bind();
 
-        setIntParam(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        setIntParam(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        setIntParam(GL_TEXTURE_MIN_FILTER, filter);
+        setIntParam(GL_TEXTURE_MAG_FILTER, filter);
 
         setIntParam(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         setIntParam(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-        applyTexture(format, type);
+        applyTexture(internalFormat, format, type);
 
         unbind();
     }
@@ -89,8 +90,8 @@ public class Texture {
         GL30.glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    private void applyTexture(int format, int type) {
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
+    private void applyTexture(int internalFormat, int format, int type) {
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format,
                 type, 0);
     }
 
