@@ -1,6 +1,7 @@
 package engine.Helper;
 
 import engine.Object.GameObject;
+import engine.UI.Quad;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -27,6 +28,11 @@ public class MatrixHelper {
             current = current.getParent();
         }
 
+        return matrix;
+    }
+
+    public static Matrix4f createTransformationMatrix(Quad quad) {
+        Matrix4f matrix = createTransformationMatrix(quad.getPosition(), quad.getRotation(), quad.getScale());
         return matrix;
     }
 
