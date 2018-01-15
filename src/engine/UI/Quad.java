@@ -1,26 +1,40 @@
 package engine.UI;
 
-import engine.Shader.ShaderProgram;
+import engine.Shader.QuadShader;
 import engine.Texture.Texture;
+import org.joml.Vector3f;
 
 public class Quad {
 
-    private float width, height;
     private Texture texture;
-    private ShaderProgram shaderProgram;
+    private QuadShader shaderProgram;
+    protected Vector3f position, rotation, scale;
 
-    public Quad(float width, float height, Texture texture, ShaderProgram shaderProgram) {
-        this.width = width;
-        this.height = height;
+    public Quad(Vector3f position, Vector3f scale, Texture texture, QuadShader shaderProgram) {
         this.texture = texture;
         this.shaderProgram = shaderProgram;
+        this.position = position;
+        this.rotation = new Vector3f(0);
+        this.scale = scale;
     }
 
     public Texture getTexture() {
         return texture;
     }
 
-    public ShaderProgram getShaderProgram() {
+    public QuadShader getShaderProgram() {
         return shaderProgram;
+    }
+
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public Vector3f getRotation() {
+        return rotation;
+    }
+
+    public Vector3f getScale() {
+        return scale;
     }
 }
