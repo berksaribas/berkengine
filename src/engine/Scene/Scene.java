@@ -5,18 +5,20 @@ import engine.Model.ModelController;
 import engine.Object.ObjectController;
 import engine.Renderer;
 import engine.Shader.ObjectShader;
+import engine.Shader.QuadShader;
 import engine.Shader.ShadowShader;
 import engine.Shader.SkyboxShader;
+import engine.UI.UIController;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 public abstract class Scene {
     protected Renderer renderer;
     protected ObjectController objectController;
     protected ModelController modelController;
+    protected UIController uiController;
 
-    private final float FOV = 50;
+    private final float FOV = 60;
     private final float NEARPLANE = 0.025f;
     private final float FARPLANE = 100;
 
@@ -25,6 +27,7 @@ public abstract class Scene {
     protected ObjectShader objectShader;
     protected SkyboxShader skyboxShader;
     protected ShadowShader shadowShader;
+    protected QuadShader quadShader;
     
     private int WIDTH, HEIGHT;
 
@@ -33,6 +36,7 @@ public abstract class Scene {
         HEIGHT = height;
         objectController = new ObjectController();
         modelController = new ModelController();
+        uiController = new UIController();
         setPerspectiveMatrix();
         initializeShaders();
         initializeLights();
@@ -67,6 +71,8 @@ public abstract class Scene {
 
         shadowShader = new ShadowShader();
 
+        quadShader = new QuadShader();
+
     }
 
     protected abstract void initializeLights();
@@ -85,6 +91,8 @@ public abstract class Scene {
 
     protected abstract void renderShadows();
 
+    protected abstract void renderUI();
+
     public void loop(float delta) {
 
         objectShader.start();
@@ -95,11 +103,7 @@ public abstract class Scene {
 
         renderer.prepare();
 
-        shadowShader.start();
-
         renderShadows();
-
-        shadowShader.stop();
 
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
 
@@ -114,6 +118,12 @@ public abstract class Scene {
         renderObjects();
 
         objectShader.stop();
+
+        quadShader.start();
+
+        renderUI();
+
+        quadShader.stop();
     }
 
 }
