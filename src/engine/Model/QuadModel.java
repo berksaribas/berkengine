@@ -2,9 +2,12 @@ package engine.Model;
 
 public class QuadModel {
     private RawModel quadModel;
-    private static QuadModel ourInstance = new QuadModel();
+    private static QuadModel ourInstance;
 
     public static QuadModel getInstance() {
+        if(ourInstance == null) {
+            ourInstance = new QuadModel();
+        }
         return ourInstance;
     }
 
