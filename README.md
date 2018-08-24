@@ -6,3 +6,4 @@ A simple game engine implemented with LWJGL. Supports blinn-phong shading, shado
 
 - Physically based rendering support
 - Remove old game object architecture, implementation of new ECS architecture.
+- Instanced rendering
