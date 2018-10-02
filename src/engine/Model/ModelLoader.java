@@ -48,7 +48,9 @@ public class ModelLoader {
         storeDataInAttributeList(0, 3, vertices);
         unbindVAO();
         return new RawModel(vaoID, vertices.length / 3);
-    };
+    }
+
+    ;
 
     public RawModel loadToVAO(float[] vertices, float[] textureCoordinates) {
         int vaoID = createVAO();
@@ -56,7 +58,9 @@ public class ModelLoader {
         storeDataInAttributeList(1, 2, textureCoordinates);
         unbindVAO();
         return new RawModel(vaoID, vertices.length / 3);
-    };
+    }
+
+    ;
 
     private void storeDataInAttributeList(int attributeNumber, int size, float[] vertices) {
         int vboID = GL15.glGenBuffers();

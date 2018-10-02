@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DisplayManager {
@@ -42,7 +41,7 @@ public class DisplayManager {
 
         windowID = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
 
-        if ( windowID == NULL ) {
+        if (windowID == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
@@ -88,7 +87,7 @@ public class DisplayManager {
         return glfwWindowShouldClose(windowID);
     }
 
-    public void update(){
+    public void update() {
         glfwSwapBuffers(windowID);
         glfwPollEvents();
         long currentFrameTime = System.nanoTime();
@@ -96,7 +95,7 @@ public class DisplayManager {
         lastFrameTime = currentFrameTime;
     }
 
-    public void closeDisplay(){
+    public void closeDisplay() {
         glfwTerminate();
     }
 

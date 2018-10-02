@@ -8,9 +8,10 @@ public class RawModel {
         this.vertexCount = vertexCount;
     }
 
-    public RawModel() {}
+    public RawModel() {
+    }
 
-    public void setRawModel (RawModel rawModel) {
+    public void setRawModel(RawModel rawModel) {
         this.vaoID = rawModel.vaoID;
         this.vertexCount = rawModel.vertexCount;
     }

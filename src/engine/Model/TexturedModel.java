@@ -2,25 +2,28 @@ package engine.Model;
 
 import engine.Texture.Texture;
 
-public class TexturedModel{
-    private Texture texture;
+import java.util.ArrayList;
+
+public class TexturedModel {
+    private ArrayList<Texture> textures;
     private RawModel rawModel;
 
-    public TexturedModel(RawModel rawModel, String fileName) {
+    public TexturedModel(RawModel rawModel) {
         this.rawModel = rawModel;
-        this.texture = new Texture(fileName);
+        this.textures = new ArrayList<>();
     }
 
     public TexturedModel() {
         rawModel = new RawModel();
+        this.textures = new ArrayList<>();
     }
 
     public void loadTexture(String fileName) {
-        texture = new Texture(fileName);
+        textures.add(new Texture(fileName));
     }
 
-    public Texture getTexture() {
-        return texture;
+    public ArrayList<Texture> getTextures() {
+        return textures;
     }
 
     public RawModel getRawModel() {

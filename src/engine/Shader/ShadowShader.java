@@ -2,7 +2,7 @@ package engine.Shader;
 
 import org.joml.Matrix4f;
 
-public class ShadowShader extends ShaderProgram{
+public class ShadowShader extends ShaderProgram {
     private static final String vertexString = "ShadowShaderVertex.glsl";
     private static final String fragmentLocation = "ShadowShaderFragment.glsl";
 

@@ -31,21 +31,21 @@ public class AABB {
         float tn = position.z - extend.z;
 
 
-        if((or > tl && or - tl > (object.extend.x + extend.x) * 2)) {
+        if ((or > tl && or - tl > (object.extend.x + extend.x) * 2)) {
             return false;
-        } else if(tl > ol && tr - ol > (object.extend.x + extend.x) * 2) {
-            return false;
-        }
-
-        if((ou > tb && ou - tb > (object.extend.y + extend.y) * 2)) {
-            return false;
-        } else if(tu > ob && tu - ob > (object.extend.y + extend.y) * 2) {
+        } else if (tl > ol && tr - ol > (object.extend.x + extend.x) * 2) {
             return false;
         }
 
-        if((of > tn && of - tn > (object.extend.z + extend.z) * 2)) {
+        if ((ou > tb && ou - tb > (object.extend.y + extend.y) * 2)) {
             return false;
-        } else if(tf > on && tf - on > (object.extend.z + extend.z) * 2) {
+        } else if (tu > ob && tu - ob > (object.extend.y + extend.y) * 2) {
+            return false;
+        }
+
+        if ((of > tn && of - tn > (object.extend.z + extend.z) * 2)) {
+            return false;
+        } else if (tf > on && tf - on > (object.extend.z + extend.z) * 2) {
             return false;
         }
 

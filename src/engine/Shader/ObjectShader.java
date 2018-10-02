@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class ObjectShader extends ShaderProgram{
+public class ObjectShader extends ShaderProgram {
     private static final String vertexString = "ObjectShaderVertex.glsl";
     private static final String fragmentLocation = "ObjectShaderFragment.glsl";
 
@@ -78,4 +78,5 @@ public class ObjectShader extends ShaderProgram{
     public void setTextureRepeat(int repeat) {
         loadInt(textureRepeat, repeat);
     }
+
 }

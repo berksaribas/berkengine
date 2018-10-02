@@ -1,7 +1,7 @@
 package engine.PostFX;
 
 import engine.FrameBuffer.FBO;
-import engine.Renderer;
+import engine.Helper.RenderHelper;
 import engine.Shader.HorizontalBlurShader;
 import engine.Shader.VerticalBlurShader;
 import engine.Texture.Texture;
@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL30.GL_RG;
 import static org.lwjgl.opengl.GL30.GL_RG32F;
 
-public class GaussianBlur extends Effect{
+public class GaussianBlur extends Effect {
     private VerticalBlurShader verticalBlurShader;
     private HorizontalBlurShader horizontalBlurShader;
 
@@ -26,18 +26,18 @@ public class GaussianBlur extends Effect{
     }
 
     @Override
-    public void apply(Texture texture, FBO fbo, Renderer renderer) {
+    public void apply(Texture texture, FBO fbo) {
         fbo.bind();
 
         clearAndSet();
 
         horizontalBlurShader.start();
 
-        renderer.renderQuad(texture);
+        RenderHelper.renderQuad(texture);
 
         verticalBlurShader.start();
 
-        renderer.renderQuad(result);
+        RenderHelper.renderQuad(result);
 
         fbo.unbind();
     }

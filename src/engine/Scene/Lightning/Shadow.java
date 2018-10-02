@@ -39,7 +39,7 @@ public class Shadow {
     }
 
     public void setBorder(Texture texture) {
-        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float borderColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
         texture.bind();
         texture.setFloatParam(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
@@ -77,7 +77,8 @@ public class Shadow {
     public void updateLightView(Vector3f direction, Vector3f pos) {
         lightView = new Matrix4f();
 
-        lightView.lookAt(new Vector3f(direction.x + pos.x, direction.y + pos.y, direction.z + pos.z), pos, new Vector3f(0, 1, 0));
+        lightView.lookAt(new Vector3f(direction.x + pos.x, direction.y + pos.y, direction.z + pos.z), pos,
+                new Vector3f(0, 1, 0));
 
         lightView.m30(lightView.m30() - (lightView.m30() % (2f * RADIUS / size)));
         lightView.m31(lightView.m31() - (lightView.m31() % (2f * RADIUS / size)));

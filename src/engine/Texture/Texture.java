@@ -42,7 +42,7 @@ public class Texture {
 
     }
 
-    public Texture(int width, int height, int filter, int internalFormat, int format,int type) {
+    public Texture(int width, int height, int filter, int internalFormat, int format, int type) {
         this.width = width;
         this.height = height;
 

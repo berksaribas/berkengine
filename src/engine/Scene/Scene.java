@@ -1,129 +1,97 @@
 package engine.Scene;
 
+import engine.Base.Systems.*;
+import engine.Base.Utils.ShaderUtils;
+import engine.EntityComponentSystem.Entity.EntityManager;
+import engine.EntityComponentSystem.System.BaseSystem;
 import engine.Helper.MatrixHelper;
-import engine.Model.ModelController;
-import engine.Object.ObjectController;
-import engine.Renderer;
 import engine.Shader.ObjectShader;
 import engine.Shader.QuadShader;
 import engine.Shader.ShadowShader;
 import engine.Shader.SkyboxShader;
-import engine.UI.UIController;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+
 public abstract class Scene {
-    protected Renderer renderer;
-    protected ObjectController objectController;
-    protected ModelController modelController;
-    protected UIController uiController;
-
-    private final float FOV = 60;
-    private final float NEARPLANE = 0.025f;
-    private final float FARPLANE = 100;
-
+    private EntityManager entityManager;
     private Matrix4f projectionMatrix;
-
-    protected ObjectShader objectShader;
-    protected SkyboxShader skyboxShader;
-    protected ShadowShader shadowShader;
-    protected QuadShader quadShader;
-    
-    private int WIDTH, HEIGHT;
+    public static int WIDTH, HEIGHT;
+    private ArrayList<BaseSystem> systems = new ArrayList<>();
+    public static float deltaTime;
 
     public Scene(int width, int height) {
+        entityManager = new EntityManager();
         WIDTH = width;
         HEIGHT = height;
-        objectController = new ObjectController();
-        modelController = new ModelController();
-        uiController = new UIController();
         setPerspectiveMatrix();
         initializeShaders();
-        initializeLights();
-        initializeModels();
-        createObjects();
-        initializeCamera();
         setGL();
+        setupSystems();
     }
 
-    protected void setGL() {
+    public abstract void registerSystems(ArrayList<BaseSystem> systems);
+
+    private void setupSystems() {
+        registerSystems(systems);
+
+        systems.add(new PhysicsSystem(entityManager));
+        systems.add(new CameraSystem(entityManager));
+        systems.add(new ShadowSystem(entityManager));
+        systems.add(new EffectSystem(entityManager));
+        systems.add(new SkyboxSystem(entityManager));
+        systems.add(new RenderSystem(entityManager));
+        systems.add(new QuadSystem(entityManager));
+        systems.add(new DestroySystem(entityManager));
+    }
+
+    private void setGL() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
     }
 
-    protected void setPerspectiveMatrix() {
-        renderer = new Renderer();
+    private void setPerspectiveMatrix() {
+        float fov = 60;
+        float nearPlane = 0.025f;
+        float farPlane = 100;
         projectionMatrix = MatrixHelper
-                .createProjectionMatrix(WIDTH, HEIGHT, FOV, NEARPLANE, FARPLANE);
+                .createProjectionMatrix(WIDTH, HEIGHT, fov, nearPlane, farPlane);
     }
 
     protected void initializeShaders() {
-        objectShader = new ObjectShader();
+        ObjectShader objectShader = new ObjectShader();
         objectShader.start();
         objectShader.setProjectionMatrix(projectionMatrix);
         objectShader.stop();
+        ShaderUtils.getInstance().registerShader(objectShader);
 
-        skyboxShader = new SkyboxShader();
+        SkyboxShader skyboxShader = new SkyboxShader();
         skyboxShader.start();
         skyboxShader.setProjectionMatrix(projectionMatrix);
         skyboxShader.stop();
+        ShaderUtils.getInstance().registerShader(skyboxShader);
 
-        shadowShader = new ShadowShader();
+        ShadowShader shadowShader = new ShadowShader();
+        ShaderUtils.getInstance().registerShader(shadowShader);
 
-        quadShader = new QuadShader();
-
+        QuadShader quadShader = new QuadShader();
+        ShaderUtils.getInstance().registerShader(quadShader);
     }
-
-    protected abstract void initializeLights();
-
-    protected abstract void initializeCamera();
-
-    protected abstract void initializeModels();
-
-    protected abstract void createObjects();
-
-    protected abstract void update(float delta);
-
-    protected abstract void renderObjects();
-
-    protected abstract void renderSkybox();
-
-    protected abstract void renderShadows();
-
-    protected abstract void renderUI();
 
     public void loop(float delta) {
+        deltaTime = delta;
+        long time = System.currentTimeMillis();
 
-        objectShader.start();
+        for (int i = 0; i < systems.size(); i++) {
+            systems.get(i).update();
+        }
+        System.out.println("Frame CPU execution took: " + (System.currentTimeMillis() - time) + " miliseconds");
 
-        update(delta);
-
-        objectShader.stop();
-
-        renderer.prepare();
-
-        renderShadows();
-
-        GL11.glViewport(0, 0, WIDTH, HEIGHT);
-
-        skyboxShader.start();
-
-        renderSkybox();
-
-        skyboxShader.stop();
-
-        objectShader.start();
-
-        renderObjects();
-
-        objectShader.stop();
-
-        quadShader.start();
-
-        renderUI();
-
-        quadShader.stop();
     }
 
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }

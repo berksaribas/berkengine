@@ -4,7 +4,7 @@ import engine.Texture.Skybox;
 
 public class ClearSkybox extends Skybox {
 
-    static String[] fileNames= {
+    static String[] fileNames = {
             "textures/skybox/brightdayrt.jpg",
             "textures/skybox/brightdaylf.jpg",
             "textures/skybox/brightdayup.jpg",

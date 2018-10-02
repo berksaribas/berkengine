@@ -22,7 +22,9 @@ public class Camera {
 
 
     public void update(ObjectShader shader) {
+        shader.start();
         shader.setCamera(getViewMatrix(), eye);
+        shader.stop();
     }
 
     public void update(SkyboxShader skyboxShader) {

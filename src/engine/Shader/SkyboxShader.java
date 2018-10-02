@@ -2,7 +2,7 @@ package engine.Shader;
 
 import org.joml.Matrix4f;
 
-public class SkyboxShader extends ShaderProgram{
+public class SkyboxShader extends ShaderProgram {
     private static final String vertexString = "SkyboxShaderVertex.glsl";
     private static final String fragmentLocation = "SkyboxShaderFragment.glsl";
 

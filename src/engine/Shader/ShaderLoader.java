@@ -15,7 +15,7 @@ public class ShaderLoader {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("shaders/" + fileName));
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 shaderLines += line + "\n";
             }
         } catch (FileNotFoundException e) {
@@ -28,7 +28,7 @@ public class ShaderLoader {
         GL20.glShaderSource(shaderID, shaderLines);
         GL20.glCompileShader(shaderID);
 
-        if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+        if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
             System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
             System.out.println("Shader compilation error");
         }

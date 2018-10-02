@@ -5,7 +5,7 @@ public class QuadModel {
     private static QuadModel ourInstance;
 
     public static QuadModel getInstance() {
-        if(ourInstance == null) {
+        if (ourInstance == null) {
             ourInstance = new QuadModel();
         }
         return ourInstance;
@@ -13,9 +13,9 @@ public class QuadModel {
 
     private QuadModel() {
         float quadVertices[] = {
-                -1.0f,  1.0f, 0.0f,
+                -1.0f, 1.0f, 0.0f,
                 -1.0f, -1.0f, 0.0f,
-                1.0f,  1.0f, 0.0f,
+                1.0f, 1.0f, 0.0f,
                 1.0f, -1.0f, 0.0f
         };
 

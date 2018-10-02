@@ -144,9 +144,9 @@ public class OBJLoader {
         }
     }
 
-    private static void removeUnusedVertices(List<Vertex> vertices){
-        for(Vertex vertex:vertices){
-            if(!vertex.isSet()){
+    private static void removeUnusedVertices(List<Vertex> vertices) {
+        for (Vertex vertex : vertices) {
+            if (!vertex.isSet()) {
                 vertex.setTextureIndex(0);
                 vertex.setNormalIndex(0);
             }

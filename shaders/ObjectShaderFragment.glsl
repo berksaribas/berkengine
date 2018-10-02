@@ -12,8 +12,6 @@ uniform sampler2D depthMap;
 uniform sampler2D colorMap;
 
 float texture2DCompare(sampler2D depths, vec2 uv, float compare, float bias){
-
-
     float depth = texture2D(depths, uv).r;
     return compare - bias > depth  ? 1.0 : 0.0;
 }
@@ -63,16 +61,15 @@ float ShadowCalculation(vec3 lightVector, vec3 unitNormal) {
 //        for(int y = -1; y <= 1; ++y)
 //        {
 //            vec2 off = vec2(x,y) * texelSize;
-//            shadow += shadowSampler(depthMap, 1 / texelSize, point.xy + off, point.z, bias);
+//            shadow += shadowSampler(depthMap, 1 / texelSize, point.xy + off, point.z, 0);
 //        }
 //    }
 //    shadow /= 9.0;
-//
-    if(shadowCoordinates.z > 1.0)
-        return 0;
 
-    shadow = 1 - VSM(colorMap, point.xy, point.z);
+//    if(shadowCoordinates.z > 1.0)
+//        return 0;
 
+    shadow = VSM(colorMap, point.xy, point.z);
 
     return shadow;
 }
@@ -94,11 +91,11 @@ void main(void) {
 
     //Diffuse Lightning
     float brightness = max(dot(unitNormal, unitLight), 0.0);
-    vec3 diffuseColor = brightness * lightColor * (1.0 - shadow);
+    vec3 diffuseColor = brightness * lightColor * shadow;
 
     //Specular Lightning
     float specularness = pow(max(dot(unitHalfway, unitNormal), 0.0), 32);
-    vec3 specularColor = 0.4f * specularness * lightColor * (1.0 - shadow);
+    vec3 specularColor = 0.4f * specularness * lightColor * shadow;
 
     vec3 totalColor = (ambientColor + diffuseColor) * texture(textureSampler, passedTextureCoordinates).rgb + specularColor;
 
